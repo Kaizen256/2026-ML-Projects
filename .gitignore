@@ -22,7 +22,6 @@ datasets/
 *.hdf5
 *.npy
 *.npz
-models/
 checkpoints/
 *.pkl
 *.joblib
