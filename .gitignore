@@ -15,7 +15,6 @@ Desktop.ini
 *.tmp
 data/
 datasets/
-*.csv
 *.parquet
 *.feather
 *.h5

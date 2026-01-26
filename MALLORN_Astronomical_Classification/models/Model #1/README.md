@@ -3,7 +3,7 @@
 This notebook contains my first model for the competition.
 
 The goal of this model was to build a relatively strong baseline:
-- extract simple lightcurve features
+- extract simple lightcurve features using AI
 - train a strong XGBoost Classifier
 - optimize hyperparameters and decision threshold for F1
 
@@ -20,7 +20,7 @@ Two leaderboard submissions were generated using different random seeds, produci
 ## Features
 Each object has a time series (lightcurve) with observations in up to 6 filters: u, g, r, i, z, y
 
-The majority of these features were created by tasking chat gpt with going through astronomy research papers and creating features. I am not an astronomer therefore I cannot create astronomy features with my knowledge.
+The majority of these features were created by tasking AI to go through astronomy research papers and create features. I am not an astronomer therefore I cannot create astronomy features with my knowledge.
 
 - `Time (MJD)`: observation time in Modified Julian Date  
 - `Flux`: measured brightness (can be negative due to noise/subtraction artifacts)  
