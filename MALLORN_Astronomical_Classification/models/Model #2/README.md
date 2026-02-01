@@ -14,9 +14,9 @@ The goal of this model is a higher score and impactful feature creation:
 
 ## Results
 
-| Model | Validation Best F1 | Public LB F1 |
-|------|------------------|--------------|
-| Model 2 | 0.5102 | 0.5921 |
+| Model | Validation Best F1 | Public LB F1 | Final LB F1
+|------|------------------|--------------|---|
+| Model 2 | 0.5102 | 0.5921 | 0.5295 |
 
 Model is generalizing very well.
 

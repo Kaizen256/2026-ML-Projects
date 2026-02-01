@@ -10,11 +10,11 @@ The goal of this model was to build a relatively strong baseline:
 
 ## Results
 
-| Model   | Validation (Optuna Best F1) | Public LB F1 |
-|---------|--------|---------------|
-| Model 1 |0.7308|0.4582 - 0.4610|
+| Model   | Validation (Optuna Best F1) | Public LB F1 | Final LB F1 |
+|---------|--------|---------------|----|
+| Model 1 |0.7308|0.4582 and 0.4610|0.4153 and 0.4540|
 
-Two leaderboard submissions were generated using different random seeds, producing slightly different scores.
+Two leaderboard submissions were generated using different random seeds, producing significantly different final scores.
 
 
 ## Features
