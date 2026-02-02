@@ -9,15 +9,28 @@ The goal was to improve generalization by:
 
 ## Results
 
-| Submission | Public LB F1 | Final LB F1 |
-|-------------|--------------|-------------|
+Best parameters:
+- n_estimators: 4328
+- learning_rate: 0.007079630495604182
+- max_depth: 4
+- min_child_weight: 1
+- subsample: 0.5936362024881353
+- colsample_bytree: 0.9146736072473098
+- gamma: 0.6466321530023438
+- reg_alpha: 4.130135428812432
+- reg_lambda: 5.5649710878468825
+- max_delta_step: 1
+- grow_policy: depthwise
+
+OOF multiseed best threshold: 0.01  
+OOF multiseed best F1: 0.51875  
+OOF best alpha: 0.03  
+
+| Submission | Public LB F1 | Private LB F1 |
+|-------------|--------------|----------------|
 | 1 | 0.5613 | 0.5313 |
 | 2 | 0.5082 | 0.5119 |
 
-OOF blend calibration:
-- OOF best alpha: **0.03**
-- OOF best threshold: **0.01**
-- OOF blended best F1: **0.51875**
 
 I used AI to help implement astronomy-specific preprocessing and feature functions. I am not an astronomer.
 
@@ -208,28 +221,11 @@ This was an experiment to see if improving ranking quality would help final clas
 ## Notes on why this may have underperformed
 
 This model produced inconsistent generalization:
-- the best OOF blend weight was **alpha = 0.03**, meaning the blend mostly relied on one model family
-- the best OOF threshold was extremely low (**0.01**), suggesting probability calibration mismatch
+- the best OOF blend weight was alpha = 0.03, meaning the blend mostly relied on LGBM. (I accidently assumed it relied on XGB)
+- the best OOF threshold was extremely low (0.01), suggesting probability calibration mismatch
 - photo-z augmentation may have added noise that improved CV behavior but did not transfer cleanly to leaderboard scoring
 
 I also didn't train either model for very long at all. Longer training would yield better results, but it wouldn't be comparable to model 4 and 5.
-
-## Best Optuna result (XGBoost)
-
-Best is trial 14 with value: **0.528035337432086**
-
-Best parameters:
-- n_estimators: 4328
-- learning_rate: 0.007079630495604182
-- max_depth: 4
-- min_child_weight: 1
-- subsample: 0.5936362024881353
-- colsample_bytree: 0.9146736072473098
-- gamma: 0.6466321530023438
-- reg_alpha: 4.130135428812432
-- reg_lambda: 5.5649710878468825
-- max_delta_step: 1
-- grow_policy: depthwise
 
 ## Training and validation strategy
 
@@ -257,14 +253,4 @@ Final OOF blend parameters:
 - threshold: 0.01
 - OOF blended best F1: 0.51875
 
-## Takeaways
-
-What I learned:
-- Photo-z augmentation is not automatically helpful and can introduce distribution mismatch.
-- Blending can work, but OOF-optimal calibration (very low threshold and near-zero alpha) can signal instability.
-- More complexity does not guarantee better generalization.
-
-Next steps:
-- refine augmentation policy (when to augment, how much, and for which objects)
-- improve probability calibration and threshold stability
-- keep validation strategy strict and aligned with leaderboard behavior
+These results are extremely strange, the threshold is extremely low. Almost looks like an error. I wouldn't be surprised. I didn't give much attention to this model, it was more of a test I ran over night to see if a small ensemble improved performance. I saw the 0.03 and just assumed LGBM wasn't pulling it's weight, when it was actually XGB that wasn't helping. I even did a test on a later model and LGBM was weighted at ~0 every single time. I removed LGBM from subsequent models because of that. Next competition I will give LGBM and possibly CatBoost more of a chance instead of ignoring them. I know I used LGBM for predicting SpecType, but I could use it a lot more.

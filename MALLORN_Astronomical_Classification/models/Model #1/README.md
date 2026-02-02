@@ -10,12 +10,26 @@ The goal of this model was to build a relatively strong baseline:
 
 ## Results
 
-| Submission | Public LB F1 | Final LB F1 |
-|-------------|--------------|-------------|
+Best parameters:
+- n_estimators: 1556
+- learning_rate: 0.011529
+- max_depth: 5
+- min_child_weight: 11
+- subsample: 0.990469
+- colsample_bytree: 0.964860
+- colsample_bylevel: 0.931161
+- gamma: 0.008020
+- reg_alpha: 7.434848
+- reg_lambda: 1.937161
+
+OOF multiseed best threshold: 0.5147491638795987  
+Best validation F1: 0.730769  
+
+| Submission | Public LB F1 | Private LB F1 |
+|-------------|--------------|----------------|
 | 1 | 0.4582 | 0.4153 |
 | 2 | 0.4610 | 0.4540 |
 
-Two leaderboard submissions were generated using different random seeds, producing significantly different final scores.
 
 
 ## Features
@@ -90,30 +104,6 @@ These features describe how much band coverage exists overall:
 - stratified by target to preserve class balance
 
 The dataset is imbalanced, so I use: scale_pos_weight to weight positive examples more strongly during training.
-
-## Best Optuna results
-
-- Best validation F1: **0.730769**
-- Best params:
-  - n_estimators: 1556  
-  - learning_rate: 0.011529  
-  - max_depth: 5  
-  - min_child_weight: 11  
-  - subsample: 0.990469  
-  - colsample_bytree: 0.964860  
-  - colsample_bylevel: 0.931161  
-  - gamma: 0.008020  
-  - reg_alpha: 7.434848  
-  - reg_lambda: 1.937161  
-
-## Threshold Tuning
-
-After training the final model, I tune the decision threshold:
-
-- sweep thresholds from 0.01 to 0.99
-- choose the threshold with the best validation F1
-
-This improves performance for imbalanced classification where 0.5 is rarely optimal.
 
 ## Takeaways
 

@@ -1,29 +1,56 @@
-# Model 4: SpecType Teacher Features
+# Model 4: XGB SpecType
 
-This notebook contains my teacher–student style model for the MALLORN competition. I used AI to help design and sanity-check features, since my astronomy background is limited to an introductory university elective.
+This notebook contains Model 4 for the MALLORN challenge.
 
-This model is a structured upgrade over earlier models and focuses on exploiting a key training-only signal:
+This model is the first one that performed very well. It was enough to put me in around 130th / 925 participants on the public leaderboard. that success did not carry over to the final LB though.
+The biggest change is using SpecType (train-only metadata) to generate features that can also be computed for the test set.
 
-- The training data includes `SpecType` / `SpecTypeGroup`
-- These labels are not available in the test set
-- `SpecTypeGroup` is strongly correlated with the final target classes
-- A separate **teacher model** is trained to predict `SpecTypeGroup`
-- Its out-of-fold predicted probabilities are used as features for the final model
+A Kaggle user in a discussion post said they had good results focusing on TDE vs SN/AGN which are values in SpecType. Since SpecType is not available at test time, I train a separate model to predict SpecType, and then use its predicted probabilities as additional features in the main TDE classifier.
 
-Core goals:
+1) Train a multiclass LightGBM model to predict `SpecTypeGroup`:
+  - TDE
+  - AGN
+  - SNIa
+  - SNother
+  - Other
 
-- extract SpecTypeGroup signal without leakage
-- add high-signal teacher probability features
-- keep validation split-aware and realistic
-- stabilize predictions with fold ensembling and threshold tuning
+2) Generate OOF predicted probabilities for the train set:
+  - Each training object only gets probabilities from a model that did not train on its group-split fold.
+
+3) Fit the multiclass model on full train and predict probabilities for test.
+
+4) Append these probabilities as features:
+  - `p_spec_<class>` for each class
+  - `spec_entropy` as a confidence / ambiguity signal
+
+This gives the main classifier extra information about "what kind of transient this looks" like using only lightcurve-derived features.
 
 ## Results
 
-| Submission | Public LB F1 | Final LB F1 |
-|-------------|--------------|-------------|
+Best parameters:
+- n_estimators: 4770
+- learning_rate: 0.009408
+- max_depth: 5
+- min_child_weight: 38
+- subsample: 0.9580
+- colsample_bytree: 0.5860
+- gamma: 8.6793
+- reg_alpha: 17.5374
+- reg_lambda: 24.2249
+- max_delta_step: 2
+- grow_policy: depthwise
+
+OOF multiseed best threshold: 0.46798994974874375  
+OOF multiseed best F1: 0.5531914893617021  
+OOF AP (aucpr-ish): 0.6134734232399863  
+
+| Submission | Public LB F1 | Private LB F1 |
+|-------------|--------------|----------------|
 | 1 | 0.6309 | 0.5688 |
 | 2 | 0.6024 | 0.5333 |
 | 3 | 0.6009 | 0.5467 |
+
+At the time, the model seemed to generalize well. The first submission pushed me to around the top 200, and the follow-up submissions were all scoring above 0.6 F1. By the end of the competition, though, the results were more disappointing. The final leaderboard clearly contained harder examples than the public one, since most participants saw their F1 scores drop too. If I had stopped at this stage, I would have placed 178th, which is still respectable. Fortunately, this didn’t turn out to be my strongest model.
 
 ## Global features
 
@@ -267,34 +294,3 @@ The final classifier is trained to predict the competition target using:
 - all base lightcurve/statistical features
 - teacher OOF probability features
 - teacher confidence and entropy features
-
-## Best Optuna Result (Teacher)
-
-Best AP: **0.6134734232399863**
-
-Best parameters:
-
-- n_estimators: 4770
-- learning_rate: 0.009408
-- max_depth: 5
-- min_child_weight: 38
-- subsample: 0.9580
-- colsample_bytree: 0.5860
-- gamma: 8.6793
-- reg_alpha: 17.5374
-- reg_lambda: 24.2249
-- max_delta_step: 2
-- grow_policy: depthwise
-
-## Takeaways
-
-What worked:
-
-- Teacher probabilities added strong, structured signal.
-- OOF teacher features improved generalization.
-- Split-aware CV prevented leakage and fake validation gains.
-
-What to watch:
-
-- Teacher features must be strictly OOF.
-- Proxy-task models help, but should not replace base features.

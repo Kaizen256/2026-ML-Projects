@@ -14,16 +14,35 @@ The goal of this model is a higher score and impactful feature creation:
 
 ## Results
 
-| Model | Validation Best F1 | Public LB F1 | Final LB F1
-|------|------------------|--------------|---|
-| Model 2 | 0.5102 | 0.5921 | 0.5295 |
+Best parameters:
+- n_estimators: 3560
+- learning_rate: 0.0240
+- max_depth: 5
+- min_child_weight: 11
+- subsample: 0.5332
+- colsample_bytree: 0.5563
+- gamma: 0.7024
+- reg_alpha: 5.8620
+- reg_lambda: 9.4988
+- max_delta_step: 9
 
-Model is generalizing very well.
+OOF multiseed best threshold: 0.4583544303797469  
+OOF multiseed best F1: 0.5102040816326531  
+
+| Submission | Public LB F1 | Private LB F1 |
+|-------------|--------------|----------------|
+| 1 | 0.5921 | 0.5295 |
 
 ## Global (all-filters combined) features
 
 These are computed using **all observations across all bands** for a given object.  
 They summarize **time coverage, brightness distribution, cadence, variability, and context** (redshift + dust).
+
+Differences vs Model 1:
+ - Corrects flux/uncertainty for Milky Way dust extinction using EBV (more astrophysically correct flux features).
+ - Adds rest-frame timing features by dividing time by (1 + z) so distant objects are compared on intrinsic timescales.
+ - Expands from simple per-band stats to transient shape features (AUC above baseline, widths at 50/80%, slopes, Von Neumann eta).
+ - Adds parametric Bazin curve-fit features for bands with enough data (captures rise/decay behavior).
 
 | Feature | Meaning | Why it helps |
 |--------|---------|--------------|
@@ -133,23 +152,6 @@ For each adjacent filter pair `(a,b)`, these compare amplitude, timing, peak rat
 - stratified by target to preserve class balance
 
 The dataset is imbalanced, so I use: scale_pos_weight to weight positive examples more strongly during training.
-
-## Best Optuna results
-
-Best F1: **0.5586**
-
-Best Parameters:
-- Best params:
-  - n_estimators: 3560
-  - learning_rate: 0.0240
-  - max_depth: 5
-  - min_child_weight: 11
-  - subsample: 0.5332
-  - colsample_bytree: 0.5563
-  - gamma: 0.7024
-  - reg_alpha: 5.8620
-  - reg_lambda: 9.4988
-  - max_delta_step: 9
 
 ## Final training using the best CV hyperparameters
 
