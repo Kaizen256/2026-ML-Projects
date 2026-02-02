@@ -9,9 +9,10 @@ The goal was to improve generalization by:
 
 ## Results
 
-| Model | OOF / CV Best | Public LB F1 | Final LB F1 |
-|------:|---------------|--------------|-------------|
-| Model 3 | 0.5280 | 0.5613 and 0.5082 | 0.5313 and 0.5119 |
+| Submission | Public LB F1 | Final LB F1 |
+|-------------|--------------|-------------|
+| 1 | 0.5613 | 0.5313 |
+| 2 | 0.5082 | 0.5119 |
 
 OOF blend calibration:
 - OOF best alpha: **0.03**
