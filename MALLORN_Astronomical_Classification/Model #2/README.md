@@ -26,8 +26,8 @@ Best parameters:
 - reg_lambda: 9.4988
 - max_delta_step: 9
 
-OOF multiseed best threshold: 0.4583544303797469  
-OOF multiseed best F1: 0.5102040816326531  
+Best threshold: 0.4583544303797469  
+OOF best F1: 0.5102040816326531  
 
 | Submission | Public LB F1 | Private LB F1 |
 |-------------|--------------|----------------|
@@ -35,8 +35,8 @@ OOF multiseed best F1: 0.5102040816326531
 
 ## Global (all-filters combined) features
 
-These are computed using **all observations across all bands** for a given object.  
-They summarize **time coverage, brightness distribution, cadence, variability, and context** (redshift + dust).
+These are computed using all observations across all bands for a given object.  
+They summarize time coverage, brightness distribution, cadence, variability, and context (redshift + dust).
 
 Differences vs Model 1:
  - Corrects flux/uncertainty for Milky Way dust extinction using EBV (more astrophysically correct flux features).

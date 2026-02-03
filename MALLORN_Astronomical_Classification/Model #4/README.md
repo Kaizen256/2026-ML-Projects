@@ -42,7 +42,7 @@ Best parameters:
 
 OOF multiseed best threshold: 0.46798994974874375  
 OOF multiseed best F1: 0.5531914893617021  
-OOF AP (aucpr-ish): 0.6134734232399863  
+OOF AP (Approx of PR AUC): 0.6134734232399863  
 
 | Submission | Public LB F1 | Private LB F1 |
 |-------------|--------------|----------------|

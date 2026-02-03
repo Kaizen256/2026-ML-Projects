@@ -22,9 +22,9 @@ Best parameters:
 - max_delta_step: 1
 - grow_policy: depthwise
 
-OOF multiseed best threshold: 0.01  
-OOF multiseed best F1: 0.51875  
-OOF best alpha: 0.03  
+Best threshold: 0.01  
+OOF best F1: 0.51875  
+Best alpha: 0.03  
 
 | Submission | Public LB F1 | Private LB F1 |
 |-------------|--------------|----------------|
@@ -248,9 +248,11 @@ After training both model families across all folds:
 - for each `alpha`, search for the best F1 threshold
 - select the best `(alpha, threshold)` pair by OOF F1
 
-Final OOF blend parameters:
+Final blend parameters:
 - alpha: 0.03
 - threshold: 0.01
-- OOF blended best F1: 0.51875
+- Blended best F1: 0.51875
 
-These results are extremely strange, the threshold is extremely low. Almost looks like an error. I wouldn't be surprised. I didn't give much attention to this model, it was more of a test I ran over night to see if a small ensemble improved performance. I saw the 0.03 and just assumed LGBM wasn't pulling it's weight, when it was actually XGB that wasn't helping. I even did a test on a later model and LGBM was weighted at ~0 every single time. I removed LGBM from subsequent models because of that. Next competition I will give LGBM and possibly CatBoost more of a chance instead of ignoring them. I know I used LGBM for predicting SpecType, but I could use it a lot more.
+These results are very strange, the threshold is extremely low. More importantly, alpha = 0.03 means the blend was ~97% LightGBM and ~3% XGBoost. So this outcome suggests XGBoost contributed little or even hurt which is surprising because XGBoost was tuned using optuna and LightGBM was not.
+
+I did not spend much time debugging or tuning this blend. It was an overnight experiment to see whether a small ensemble improved stability or F1. Given the low alpha and odd threshold, this setup needs more experimentation. In later experiments, LightGBM often ended up with near-zero weight, so I dropped it from subsequent models. In future competitions, I plan to give LightGBM CatBoost a better evaluation instead of discarding them early. I already used LightGBM successfully for the SpecType teacher, and it likely has more value in the main pipeline than I explored here.

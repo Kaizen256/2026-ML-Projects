@@ -22,7 +22,7 @@ Best parameters:
 - reg_alpha: 7.434848
 - reg_lambda: 1.937161
 
-OOF multiseed best threshold: 0.5147491638795987  
+Best threshold: 0.5147491638795987  
 Best validation F1: 0.730769  
 
 | Submission | Public LB F1 | Private LB F1 |
