@@ -34,3 +34,7 @@ credentials/
 .DS_Store
 
 zz_practice
+.gitignore
+external_genept
+external_sig
+Submissions
